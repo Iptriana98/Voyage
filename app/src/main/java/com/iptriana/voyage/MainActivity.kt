@@ -9,39 +9,41 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.core.view.WindowCompat
 import com.iptriana.voyage.ui.theme.VoyageTheme
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
+        WindowCompat.setDecorFitsSystemWindows(window, false)
+
         setContent {
             VoyageTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting(
-                        name = "Android",
-                        modifier = Modifier.padding(innerPadding)
+                MainScreen(onExploreItemClicked = {
+                    launchDetailsActivity(
+                        context = this,
+                        item = it
                     )
-                }
+                })
             }
         }
     }
 }
 
 @Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    VoyageTheme {
-        Greeting("Android")
+private fun MainScreen(onExploreItemClicked: OnExploreItemClicked) {
+    Surface(color = MaterialTheme.colors.primary) {
+        var showLandingScreen by remember { mutableStateOf(true) }
+        if (showLandingScreen) {
+            LandingScreen(onTimeout = { showLandingScreen = false })
+        } else {
+            CraneHome(onExploreItemClicked = onExploreItemClicked)
+        }
     }
 }
