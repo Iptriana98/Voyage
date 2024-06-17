@@ -3,21 +3,19 @@ package com.iptriana.voyage
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
+import androidx.activity.viewModels
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.core.view.WindowCompat
+import com.iptriana.voyage.ui.details.launchDetailsActivity
+import com.iptriana.voyage.ui.home.MainViewModel
+import com.iptriana.voyage.ui.home.OnExploreItemClicked
+import com.iptriana.voyage.ui.home.VoyageHome
 import com.iptriana.voyage.ui.theme.VoyageTheme
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -25,7 +23,8 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             VoyageTheme {
-                MainScreen(onExploreItemClicked = {
+                val viewModel: MainViewModel by viewModels()
+                MainScreen(viewModel = viewModel, onExploreItemClicked = {
                     launchDetailsActivity(
                         context = this,
                         item = it
@@ -37,13 +36,13 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-private fun MainScreen(onExploreItemClicked: OnExploreItemClicked) {
-    Surface(color = MaterialTheme.colors.primary) {
-        var showLandingScreen by remember { mutableStateOf(true) }
-        if (showLandingScreen) {
-            LandingScreen(onTimeout = { showLandingScreen = false })
-        } else {
-            CraneHome(onExploreItemClicked = onExploreItemClicked)
-        }
+private fun MainScreen(onExploreItemClicked: OnExploreItemClicked, viewModel: MainViewModel) {
+    Surface(color = MaterialTheme.colorScheme.primary) {
+//        var showLandingScreen by remember { mutableStateOf(true) }
+//        if (showLandingScreen) {
+//            LandingScreen(onTimeout = { showLandingScreen = false })
+//        } else {
+            VoyageHome(onExploreItemClicked = onExploreItemClicked)
+//        }
     }
 }
